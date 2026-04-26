@@ -1,0 +1,10 @@
+# Netlify configuration for ask-north-bergen
+
+[build]
+  publish = "."
+  functions = "netlify/functions"
+
+# Tell the function bundler to include the markdown file
+# alongside chat.js so it's available at runtime
+[functions]
+  included_files = ["netlify/functions/SYSTEM_PROMPT.md"]
