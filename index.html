@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>The Township of North Bergen, NJ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  
+  :root {
+    --white: #ffffff;
+    --cream: #fffcf5;
+    --light-red: #fce8e8;
+    --dark-red: #9b1c2c;
+    --dark-red-hover: #7d1622;
+    --darker-red: #6b0e1a;
+    --yellow: #f5b800;
+    --yellow-soft: #fef3c7;
+    --text: #1a1a1a;
+    --muted: #6b5d5d;
+    --border: #e8dcdc;
+    --gray-bg: #f7f4ef;
+    --shadow: 0 1px 3px rgba(155, 28, 44, 0.08);
+    --shadow-lg: 0 10px 40px rgba(155, 28, 44, 0.18);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  
+  html, body { width: 100%; overflow-x: hidden; }
+  body { font-family: 'Public Sans', -apple-system, sans-serif; background: var(--cream); color: var(--text); line-height: 1.5; -webkit-font-smoothing: antialiased; }
+  
+  /* TOP UTILITY BAR */
+  .topbar { background: var(--darker-red); color: white; font-size: 12px; padding: 6px 0; }
+  .topbar-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+  .topbar a { color: white; text-decoration: none; opacity: 0.9; }
+  .topbar a:hover { opacity: 1; }
+  .topbar-right { display: flex; gap: 18px; align-items: center; flex-shrink: 0; }
+  
+  /* HEADER */
+  .header { background: var(--white); border-bottom: 3px solid var(--dark-red); }
+  .header-inner { max-width: 1200px; margin: 0 auto; padding: 22px 24px; display: flex; align-items: center; gap: 16px; }
+  .logo-block { display: flex; align-items: center; gap: 14px; }
+  .seal { width: 56px; height: 56px; border-radius: 50%; background: var(--dark-red); display: flex; align-items: center; justify-content: center; color: var(--yellow); font-family: 'Newsreader', serif; font-weight: 700; font-size: 20px; border: 3px solid var(--yellow); flex-shrink: 0; }
+  .logo-text { line-height: 1.1; min-width: 0; }
+  .logo-overline { font-size: 11px; font-weight: 600; color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 3px; }
+  .logo-name { font-family: 'Newsreader', serif; font-weight: 700; font-size: 26px; color: var(--dark-red); letter-spacing: -0.01em; display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+  .logo-tagline { font-size: 12px; color: var(--muted); font-style: italic; margin-top: 2px; }
+  .demo-badge { background: var(--yellow); color: var(--darker-red); font-size: 9px; font-weight: 800; padding: 3px 7px; border-radius: 3px; letter-spacing: 0.1em; }
+  
+  /* NAV */
+  .nav { background: var(--cream); border-bottom: 1px solid var(--border); }
+  .nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  .nav-inner::-webkit-scrollbar { display: none; }
+  .nav a { padding: 14px 18px; font-size: 14px; font-weight: 600; color: var(--text); text-decoration: none; white-space: nowrap; border-bottom: 3px solid transparent; margin-bottom: -1px; transition: color 0.15s; }
+  .nav a:hover { color: var(--dark-red); border-bottom-color: var(--yellow); }
+  .nav a.active { color: var(--dark-red); border-bottom-color: var(--dark-red); }
+  
+  /* HERO */
+  .hero {
+    background-image: 
+      linear-gradient(95deg, rgba(107, 14, 26, 0.95) 0%, rgba(107, 14, 26, 0.82) 30%, rgba(107, 14, 26, 0.55) 60%, rgba(155, 28, 44, 0.3) 100%),
+      url('assets/north-bergen-skyline.jpg');
+    background-size: cover;
+    background-position: center 35%;
+    background-repeat: no-repeat;
+    position: relative;
+    overflow: hidden;
+    color: white;
+  }
+  .hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at top right, rgba(245, 184, 0, 0.10) 0%, transparent 55%); pointer-events: none; }
+  .hero::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 80px; background: linear-gradient(to bottom, transparent 0%, rgba(107, 14, 26, 0.4) 100%); pointer-events: none; }
+  .hero-inner { max-width: 1200px; margin: 0 auto; padding: 64px 24px 72px; position: relative; z-index: 1; }
+  .hero-eyebrow { font-size: 12px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--yellow); margin-bottom: 14px; }
+  .hero-title { font-family: 'Newsreader', serif; font-size: 56px; font-weight: 600; line-height: 1.05; margin-bottom: 16px; letter-spacing: -0.02em; max-width: 800px; }
+  .hero-title em { color: var(--yellow); font-style: italic; }
+  .hero-sub { font-size: 17px; line-height: 1.55; max-width: 580px; opacity: 0.95; margin-bottom: 28px; }
+  .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn { display: inline-block; padding: 12px 22px; border-radius: 6px; font-size: 14px; font-weight: 600; text-decoration: none; transition: all 0.15s; cursor: pointer; border: none; font-family: inherit; }
+  .btn-primary { background: var(--yellow); color: var(--darker-red); }
+  .btn-primary:hover { background: #fbc832; transform: translateY(-1px); }
+  .btn-ghost { background: transparent; color: white; border: 1.5px solid rgba(255, 255, 255, 0.4); }
+  .btn-ghost:hover { border-color: white; background: rgba(255, 255, 255, 0.05); }
+  
+  /* QUICK LINKS */
+  .quick { background: var(--white); padding: 52px 0; }
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+  .quick-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; }
+  .quick-card { background: var(--cream); border: 1px solid var(--border); border-left: 4px solid var(--dark-red); padding: 24px; border-radius: 4px; transition: all 0.15s; cursor: pointer; display: block; text-decoration: none; color: inherit; }
+  .quick-card:hover { border-left-color: var(--yellow); transform: translateY(-2px); box-shadow: var(--shadow); }
+  .quick-card h3 { font-family: 'Newsreader', serif; font-size: 22px; font-weight: 600; color: var(--dark-red); margin-bottom: 6px; }
+  .quick-card p { font-size: 14px; color: var(--muted); line-height: 1.5; }
+  .quick-card .arrow { display: inline-block; margin-top: 12px; color: var(--dark-red); font-weight: 600; font-size: 13px; }
+  
+  /* SECTION */
+  .section { padding: 56px 0; }
+  .section-alt { background: var(--gray-bg); }
+  .section-head { margin-bottom: 32px; display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 12px; }
+  .section-title { font-family: 'Newsreader', serif; font-size: 34px; font-weight: 600; color: var(--text); letter-spacing: -0.01em; }
+  .section-title::before { content: ''; display: inline-block; width: 36px; height: 3px; background: var(--yellow); margin-right: 14px; vertical-align: middle; margin-bottom: 6px; }
+  .section-link { color: var(--dark-red); text-decoration: none; font-weight: 600; font-size: 14px; }
+  .section-link:hover { text-decoration: underline; }
+  
+  /* NEWS */
+  .news-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 22px; }
+  .news-card { background: var(--white); border-radius: 4px; overflow: hidden; border: 1px solid var(--border); transition: transform 0.15s, box-shadow 0.15s; }
+  .news-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+  .news-img { height: 160px; background: linear-gradient(135deg, var(--dark-red) 0%, var(--darker-red) 100%); display: flex; align-items: flex-end; padding: 18px; color: white; }
+  .news-img.alt-1 { background: linear-gradient(135deg, var(--yellow) 0%, #d99a00 100%); color: var(--darker-red); }
+  .news-img.alt-2 { background: linear-gradient(135deg, #c44332 0%, var(--dark-red) 100%); }
+  .news-tag { background: rgba(255, 255, 255, 0.95); color: var(--dark-red); font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 3px; letter-spacing: 0.06em; text-transform: uppercase; }
+  .news-img.alt-1 .news-tag { color: var(--darker-red); }
+  .news-body { padding: 22px 22px 24px; }
+  .news-date { font-size: 12px; color: var(--muted); font-weight: 500; margin-bottom: 8px; }
+  .news-title { font-family: 'Newsreader', serif; font-size: 20px; font-weight: 600; line-height: 1.25; color: var(--text); margin-bottom: 10px; }
+  .news-excerpt { font-size: 14px; color: var(--muted); line-height: 1.55; }
+  
+  /* DEPARTMENTS */
+  .dept-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); }
+  .dept-item { background: var(--white); padding: 18px 20px; transition: background 0.15s; cursor: pointer; text-decoration: none; color: inherit; display: block; }
+  .dept-item:hover { background: var(--cream); }
+  .dept-name { font-weight: 600; font-size: 14px; color: var(--text); margin-bottom: 4px; }
+  .dept-phone { font-size: 13px; color: var(--dark-red); font-weight: 500; font-variant-numeric: tabular-nums; }
+  
+  /* FOOTER */
+  .footer { background: var(--darker-red); color: white; padding: 48px 0 24px; }
+  .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 36px; margin-bottom: 36px; }
+  .footer h4 { font-family: 'Newsreader', serif; font-size: 18px; font-weight: 600; color: var(--yellow); margin-bottom: 14px; }
+  .footer p, .footer a { color: rgba(255, 255, 255, 0.85); font-size: 14px; line-height: 1.7; text-decoration: none; }
+  .footer a:hover { color: white; }
+  .footer ul { list-style: none; }
+  .footer-bottom { border-top: 1px solid rgba(255, 255, 255, 0.15); padding-top: 20px; text-align: center; font-size: 12px; color: rgba(255, 255, 255, 0.6); }
+  
+  /* ============================================ */
+  /* ============= TABLET (≤ 1024px) ============ */
+  /* ============================================ */
+  @media (max-width: 1024px) {
+    .hero-title { font-size: 46px; }
+    .hero-inner { padding: 56px 24px 64px; }
+    .section-title { font-size: 28px; }
+    .footer-grid { grid-template-columns: 1.5fr 1fr 1fr; gap: 28px; }
+  }
+  
+  /* ============================================ */
+  /* ============= MOBILE (≤ 640px) ============= */
+  /* ============================================ */
+  @media (max-width: 640px) {
+    .topbar-inner { padding: 0 16px; font-size: 11px; }
+    .topbar-left { display: none; }
+    .topbar-right { gap: 14px; }
+    
+    .header-inner { padding: 16px; gap: 12px; }
+    .seal { width: 44px; height: 44px; font-size: 16px; border-width: 2px; }
+    .logo-overline { font-size: 10px; }
+    .logo-name { font-size: 19px; }
+    .logo-tagline { display: none; }
+    .demo-badge { font-size: 8px; padding: 2px 5px; }
+    
+    .nav-inner { padding: 0 16px; }
+    .nav a { padding: 12px 14px; font-size: 13px; }
+    
+    .hero-inner { padding: 40px 20px 48px; }
+    .hero-eyebrow { font-size: 11px; margin-bottom: 10px; }
+    .hero-title { font-size: 32px; line-height: 1.1; margin-bottom: 12px; }
+    .hero-sub { font-size: 15px; margin-bottom: 22px; }
+    .hero-actions { flex-direction: column; align-items: stretch; gap: 10px; }
+    .btn { text-align: center; padding: 14px 20px; }
+    
+    .quick { padding: 36px 0; }
+    .container { padding: 0 16px; }
+    .quick-grid { gap: 14px; }
+    .quick-card { padding: 20px; }
+    .quick-card h3 { font-size: 19px; }
+    
+    .section { padding: 36px 0; }
+    .section-head { margin-bottom: 22px; }
+    .section-title { font-size: 24px; }
+    .section-title::before { width: 28px; }
+    .news-grid { gap: 14px; }
+    .news-img { height: 130px; }
+    .news-body { padding: 18px; }
+    .news-title { font-size: 18px; }
+    
+    .dept-grid { grid-template-columns: 1fr 1fr; }
+    .dept-item { padding: 14px 16px; }
+    
+    .footer { padding: 36px 0 20px; }
+    .footer-grid { grid-template-columns: 1fr; gap: 24px; margin-bottom: 28px; }
+  }
+  
+  /* ============================================ */
+  /* =========== CHAT WIDGET STYLES ============= */
+  /* ============================================ */
+  
+  .cw-launcher {
+    position: fixed;
+    bottom: calc(20px + var(--safe-bottom));
+    right: 20px;
+    z-index: 1000;
+    background: var(--dark-red);
+    color: white;
+    border: none;
+    border-radius: 100px;
+    padding: 14px 22px 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    box-shadow: var(--shadow-lg);
+    font-family: 'Public Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    transition: all 0.2s;
+    animation: cw-pulse 2.5s infinite;
+  }
+  .cw-launcher:hover { background: var(--dark-red-hover); transform: translateY(-2px); }
+  .cw-launcher.hidden { display: none; }
+  .cw-launcher-icon { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; }
+  
+  @keyframes cw-pulse {
+    0%, 100% { box-shadow: var(--shadow-lg), 0 0 0 0 rgba(155, 28, 44, 0.4); }
+    50% { box-shadow: var(--shadow-lg), 0 0 0 12px rgba(155, 28, 44, 0); }
+  }
+  
+  .cw-panel {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1001;
+    width: 400px;
+    height: 640px;
+    max-height: calc(100vh - 40px);
+    background: var(--white);
+    border-radius: 14px;
+    box-shadow: var(--shadow-lg);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transform: translateY(20px) scale(0.96);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+  .cw-panel.open { transform: translateY(0) scale(1); opacity: 1; pointer-events: auto; }
+  
+  .cw-header { padding: 14px 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: var(--white); position: relative; flex-shrink: 0; }
+  .cw-header::after { content: ''; position: absolute; bottom: -1px; left: 16px; width: 48px; height: 3px; background: var(--yellow); }
+  .cw-brand-title { font-family: 'Newsreader', serif; font-size: 17px; font-weight: 600; color: var(--dark-red); line-height: 1.1; }
+  .cw-brand-sub { font-size: 11px; color: var(--muted); font-weight: 500; margin-top: 2px; }
+  .cw-controls { display: flex; gap: 8px; align-items: center; }
+  .cw-lang-toggle { display: flex; border: 1.5px solid var(--dark-red); border-radius: 4px; overflow: hidden; font-size: 11px; font-weight: 600; letter-spacing: 0.04em; }
+  .cw-lang-toggle button { padding: 4px 9px; border: none; background: transparent; cursor: pointer; color: var(--dark-red); font-family: inherit; }
+  .cw-lang-toggle button.active { background: var(--dark-red); color: white; }
+  .cw-close { background: transparent; border: none; cursor: pointer; color: var(--muted); padding: 4px; border-radius: 4px; line-height: 0; }
+  .cw-close:hover { background: var(--cream); color: var(--dark-red); }
+  
+  .cw-messages { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 16px; background: var(--cream); }
+  .cw-message { margin-bottom: 12px; display: flex; flex-direction: column; max-width: 88%; animation: cw-fadeIn 0.2s ease-out; }
+  @keyframes cw-fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+  .cw-message.bot { align-self: flex-start; }
+  .cw-message.user { align-self: flex-end; align-items: flex-end; }
+  .cw-bubble { padding: 10px 14px; border-radius: 12px; font-size: 14px; line-height: 1.5; word-wrap: break-word; white-space: pre-wrap; }
+  .cw-message.bot .cw-bubble { background: var(--light-red); color: var(--text); border-bottom-left-radius: 3px; }
+  .cw-message.user .cw-bubble { background: var(--dark-red); color: white; border-bottom-right-radius: 3px; }
+  .cw-message.bot .cw-bubble strong { color: var(--dark-red); font-weight: 700; background: linear-gradient(transparent 65%, var(--yellow-soft) 65%); padding: 0 2px; }
+  .cw-message.user .cw-bubble strong { color: var(--yellow); font-weight: 700; }
+  
+  .cw-typing { display: flex; gap: 4px; padding: 12px 16px; }
+  .cw-typing span { width: 6px; height: 6px; background: var(--dark-red); border-radius: 50%; opacity: 0.4; animation: cw-bounce 1.4s infinite ease-in-out; }
+  .cw-typing span:nth-child(2) { animation-delay: 0.2s; }
+  .cw-typing span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes cw-bounce { 0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; } 40% { transform: scale(1); opacity: 1; } }
+  
+  .cw-input-area { padding: 12px 14px calc(12px + var(--safe-bottom)); border-top: 1px solid var(--border); background: var(--white); display: flex; gap: 8px; align-items: flex-end; flex-shrink: 0; }
+  .cw-input-wrap { flex: 1; background: var(--cream); border: 1.5px solid var(--border); border-radius: 9px; padding: 9px 12px; transition: border-color 0.15s; }
+  .cw-input-wrap:focus-within { border-color: var(--dark-red); }
+  /* 16px font on input prevents iOS Safari auto-zoom on focus */
+  .cw-input { width: 100%; border: none; background: transparent; font-family: inherit; font-size: 16px; resize: none; outline: none; color: var(--text); max-height: 100px; line-height: 1.4; }
+  .cw-input::placeholder { color: var(--muted); }
+  .cw-send { background: var(--dark-red); color: white; border: none; border-radius: 9px; padding: 0 16px; font-family: inherit; font-weight: 600; cursor: pointer; font-size: 13px; height: 40px; transition: background 0.15s; }
+  .cw-send:hover:not(:disabled) { background: var(--dark-red-hover); }
+  .cw-send:disabled { opacity: 0.4; cursor: not-allowed; }
+  .cw-footer { text-align: center; font-size: 10px; color: var(--muted); padding: 6px 14px 8px; background: var(--white); flex-shrink: 0; }
+  
+  /* CHAT WIDGET MOBILE - full screen takeover */
+  @media (max-width: 640px) {
+    .cw-launcher { bottom: calc(16px + var(--safe-bottom)); right: 16px; padding: 12px 18px 12px 14px; font-size: 14px; }
+    .cw-panel {
+      bottom: 0; right: 0; left: 0; top: 0;
+      width: 100%; height: 100vh; height: 100dvh;
+      max-height: 100vh; max-height: 100dvh;
+      border-radius: 0;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP UTILITY BAR -->
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="topbar-left">4233 Kennedy Boulevard · 201-392-2000</div>
+    <div class="topbar-right">
+      <a href="#">Translate</a>
+      <a href="#">Sign In</a>
+      <a href="#">Newsletter</a>
+    </div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-inner">
+    <div class="logo-block">
+      <div class="seal">NB</div>
+      <div class="logo-text">
+        <div class="logo-overline">The Township of</div>
+        <div class="logo-name">North Bergen<span class="demo-badge">DEMO</span></div>
+        <div class="logo-tagline">A Progressive Community · Hudson County, NJ</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#" class="active">Home</a>
+    <a href="#">Departments</a>
+    <a href="#">Services</a>
+    <a href="#">Recreation</a>
+    <a href="#">Tax Collector</a>
+    <a href="#">Courts</a>
+    <a href="#">Forms</a>
+    <a href="#">News &amp; Events</a>
+    <a href="#">Contact</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">Welcome to Our Township</div>
+    <h1 class="hero-title">A Progressive <em>Community</em><br>on the Hudson</h1>
+    <p class="hero-sub">Home to over 60,000 residents, the Township of North Bergen offers a vibrant blend of urban convenience and neighborhood character, with sweeping views of the Manhattan skyline and a thriving cultural life.</p>
+    <div class="hero-actions">
+      <a href="#" class="btn btn-primary">Explore Services</a>
+      <a href="#" class="btn btn-ghost">Find Your Department</a>
+    </div>
+  </div>
+</section>
+
+<!-- QUICK LINKS -->
+<section class="quick">
+  <div class="container">
+    <div class="quick-grid">
+      <a href="#" class="quick-card"><h3>Pay Property Taxes</h3><p>Quarterly tax bills, online payment, and assessment information.</p><span class="arrow">Tax Collector →</span></a>
+      <a href="#" class="quick-card"><h3>Recreation &amp; Pool</h3><p>Programs, registration, summer pool memberships, and youth sports.</p><span class="arrow">Parks &amp; Recreation →</span></a>
+      <a href="#" class="quick-card"><h3>Permits &amp; Forms</h3><p>Building permits, parking, business licenses, and online forms.</p><span class="arrow">Forms Library →</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- NEWS -->
+<section class="section section-alt">
+  <div class="container">
+    <div class="section-head"><h2 class="section-title">News &amp; Events</h2><a href="#" class="section-link">View all updates →</a></div>
+    <div class="news-grid">
+      <div class="news-card">
+        <div class="news-img"><span class="news-tag">Public Works</span></div>
+        <div class="news-body"><div class="news-date">April 22, 2026</div><div class="news-title">Spring Cleanup Schedule Now Available</div><div class="news-excerpt">Bulk pickup, leaf collection updates, and the household hazardous waste event scheduled for late April.</div></div>
+      </div>
+      <div class="news-card">
+        <div class="news-img alt-1"><span class="news-tag">Recreation</span></div>
+        <div class="news-body"><div class="news-date">April 18, 2026</div><div class="news-title">Pool Memberships Open for 2026 Season</div><div class="news-excerpt">Annual passes and per-diem registration begins at the Recreation Center on Meadowview Avenue.</div></div>
+      </div>
+      <div class="news-card">
+        <div class="news-img alt-2"><span class="news-tag">Township News</span></div>
+        <div class="news-body"><div class="news-date">April 14, 2026</div><div class="news-title">Mayor Sacco Announces Infrastructure Plan</div><div class="news-excerpt">Five-year roadmap covering road resurfacing, park improvements, and upgrades to municipal facilities.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DEPARTMENTS -->
+<section class="section">
+  <div class="container">
+    <div class="section-head"><h2 class="section-title">Departments</h2><a href="#" class="section-link">Full directory →</a></div>
+    <div class="dept-grid">
+      <a href="#" class="dept-item"><div class="dept-name">Public Works</div><div class="dept-phone">201-392-2161</div></a>
+      <a href="#" class="dept-item"><div class="dept-name">NBMUA (Trash &amp; Recycling)</div><div class="dept-phone">201-422-0100</div></a>
+      <a href="#" class="dept-item"><div class="dept-name">Police (Non-Emergency)</div><div class="dept-phone">201-392-2100</div></a>
+      <a href="#" class="dept-item"><div class="dept-name">Tax Collector</div><div class="dept-phone">201-392-2017</div></a>
+      <a href="#" class="dept-item"><div class="dept-name">Code Enforcement</div><div class="dept-phone">201-392-2051</div></a>
+      <a href="#" class="dept-item"><div class="dept-name">Parks &amp; Recreation</div><div class="dept-phone">201-392-2062</div></a>
+      <a href="#" class="dept-item"><div class="dept-name">Township Clerk</div><div class="dept-phone">201-392-2024</div></a>
+      <a href="#" class="dept-item"><div class="dept-name">Vital Statistics</div><div class="dept-phone">201-392-2050</div></a>
+      <a href="#" class="dept-item"><div class="dept-name">Health &amp; Welfare</div><div class="dept-phone">201-392-2084</div></a>
+      <a href="#" class="dept-item"><div class="dept-name">Courts &amp; Violations</div><div class="dept-phone">201-392-2090</div></a>
+      <a href="#" class="dept-item"><div class="dept-name">Parking Authority</div><div class="dept-phone">201-869-6200</div></a>
+      <a href="#" class="dept-item"><div class="dept-name">Public Library</div><div class="dept-phone">201-869-4715</div></a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <h4>Township of North Bergen</h4>
+        <p>4233 Kennedy Boulevard<br>North Bergen, NJ 07047<br>Tel: 201-392-2000</p>
+        <p style="margin-top: 14px;">Hours: Monday–Friday, 8:30 AM to 4:30 PM</p>
+      </div>
+      <div>
+        <h4>Quick Links</h4>
+        <ul><li><a href="#">Departments</a></li><li><a href="#">Pay Online</a></li><li><a href="#">Forms</a></li><li><a href="#">OPRA Requests</a></li></ul>
+      </div>
+      <div>
+        <h4>Connect</h4>
+        <ul><li><a href="#">Facebook</a></li><li><a href="#">Instagram</a></li><li><a href="#">X / Twitter</a></li><li><a href="#">Newsletter</a></li></ul>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2026 The Township of North Bergen, NJ · All Rights Reserved · Demo by VMMI / KYD Studios</div>
+  </div>
+</footer>
+
+<!-- CHAT WIDGET -->
+<button class="cw-launcher" id="cw-launcher" aria-label="Open Ask North Bergen">
+  <span class="cw-launcher-icon">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+  </span>
+  <span>Ask North Bergen</span>
+</button>
+
+<div class="cw-panel" id="cw-panel" role="dialog" aria-labelledby="cw-title" aria-hidden="true">
+  <div class="cw-header">
+    <div>
+      <div class="cw-brand-title" id="cw-title">Ask North Bergen</div>
+      <div class="cw-brand-sub" id="cw-brand-sub">Township services assistant</div>
+    </div>
+    <div class="cw-controls">
+      <div class="cw-lang-toggle" role="group" aria-label="Language">
+        <button id="cw-lang-en" class="active" aria-pressed="true">EN</button>
+        <button id="cw-lang-es" aria-pressed="false">ES</button>
+      </div>
+      <button class="cw-close" id="cw-close" aria-label="Close">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="cw-messages" id="cw-messages" role="log" aria-live="polite"></div>
+  <div class="cw-input-area">
+    <div class="cw-input-wrap">
+      <textarea class="cw-input" id="cw-input" rows="1" maxlength="2000" placeholder="Type your question..." aria-label="Type your question"></textarea>
+    </div>
+    <button class="cw-send" id="cw-send" aria-label="Send">Send</button>
+  </div>
+  <div class="cw-footer" id="cw-footer">Conversations are logged as municipal records.</div>
+</div>
+
+<script>
+const COPY = {
+  en: {
+    sub: "Township services assistant",
+    placeholder: "Type your question...",
+    send: "Send",
+    footer: "Conversations are logged as municipal records.",
+    opener: "Hi! 👋 I'm Ask North Bergen, an AI assistant for township services. Heads up: this chat is logged as part of municipal records. Please don't share Social Security numbers, credit card info, or medical details. What can I help you find?",
+    error: "Having trouble connecting right now. For immediate help: 201-392-2000, weekdays 8:30 AM to 4:30 PM.",
+    retry: "Lost connection for a sec. Try again, or call 201-392-2000.",
+  },
+  es: {
+    sub: "Asistente de servicios del municipio",
+    placeholder: "Escriba su pregunta...",
+    send: "Enviar",
+    footer: "Las conversaciones quedan registradas como archivos municipales.",
+    opener: "Hola 👋, soy Ask North Bergen, un asistente de inteligencia artificial para los servicios del municipio. Aviso: esta conversación queda registrada en los archivos del municipio. Por favor no comparta números de seguro social, datos de tarjetas de crédito ni información médica. ¿En qué le puedo ayudar?",
+    error: "Hay problemas de conexión. Para ayuda inmediata: 201-392-2000, días laborables 8:30 AM a 4:30 PM.",
+    retry: "Se perdió la conexión por un momento. Intente de nuevo o llame al 201-392-2000.",
+  }
+};
+
+const SESSION_KEY = "ask-nb-session";
+const LANG_KEY = "ask-nb-lang";
+const SESSION_MAX_AGE = 24 * 60 * 60 * 1000; // 24 hours
+
+let lang = localStorage.getItem(LANG_KEY) || (navigator.language?.startsWith("es") ? "es" : "en");
+let conversation = loadSession();
+let isOpen = false;
+
+const $launcher = document.getElementById("cw-launcher");
+const $panel = document.getElementById("cw-panel");
+const $close = document.getElementById("cw-close");
+const $messages = document.getElementById("cw-messages");
+const $input = document.getElementById("cw-input");
+const $send = document.getElementById("cw-send");
+const $langEn = document.getElementById("cw-lang-en");
+const $langEs = document.getElementById("cw-lang-es");
+
+function loadSession() {
+  try {
+    const raw = localStorage.getItem(SESSION_KEY);
+    if (!raw) return [];
+    const data = JSON.parse(raw);
+    if (Date.now() - data.timestamp > SESSION_MAX_AGE) {
+      localStorage.removeItem(SESSION_KEY);
+      return [];
+    }
+    return data.messages || [];
+  } catch { return []; }
+}
+
+function saveSession() {
+  try {
+    localStorage.setItem(SESSION_KEY, JSON.stringify({ timestamp: Date.now(), messages: conversation }));
+  } catch {}
+}
+
+function applyLang() {
+  document.getElementById("cw-brand-sub").textContent = COPY[lang].sub;
+  document.getElementById("cw-footer").textContent = COPY[lang].footer;
+  $input.placeholder = COPY[lang].placeholder;
+  $send.textContent = COPY[lang].send;
+  $langEn.classList.toggle("active", lang === "en");
+  $langEs.classList.toggle("active", lang === "es");
+  $langEn.setAttribute("aria-pressed", lang === "en");
+  $langEs.setAttribute("aria-pressed", lang === "es");
+  localStorage.setItem(LANG_KEY, lang);
+}
+
+function renderMessages() {
+  $messages.innerHTML = "";
+  if (conversation.length === 0) {
+    addMessage("bot", COPY[lang].opener, false);
+  } else {
+    conversation.forEach(m => addMessage(m.role, m.content, false));
+  }
+}
+
+function addMessage(role, content, save = true) {
+  const el = document.createElement("div");
+  el.className = `cw-message ${role}`;
+  const bubble = document.createElement("div");
+  bubble.className = "cw-bubble";
+  bubble.innerHTML = formatContent(content);
+  el.appendChild(bubble);
+  $messages.appendChild(el);
+  scrollToBottom();
+  if (save) {
+    conversation.push({ role, content });
+    saveSession();
+  }
+}
+
+function formatContent(text) {
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+}
+
+function scrollToBottom() {
+  requestAnimationFrame(() => { $messages.scrollTop = $messages.scrollHeight; });
+}
+
+function showTyping() {
+  const el = document.createElement("div");
+  el.className = "cw-message bot";
+  el.id = "cw-typing-indicator";
+  el.innerHTML = '<div class="cw-typing"><span></span><span></span><span></span></div>';
+  $messages.appendChild(el);
+  scrollToBottom();
+}
+
+function hideTyping() { document.getElementById("cw-typing-indicator")?.remove(); }
+
+async function sendMessage(text) {
+  if (!text.trim()) return;
+  addMessage("user", text);
+  $input.value = "";
+  autoResize();
+  $send.disabled = true;
+  showTyping();
+  
+  try {
+    const response = await fetch("/.netlify/functions/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        messages: conversation.map(m => ({ role: m.role, content: m.content })),
+        language: lang,
+        timestamp: new Date().toISOString()
+      })
+    });
+    
+    hideTyping();
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const data = await response.json();
+    addMessage("bot", data.response);
+  } catch (err) {
+    hideTyping();
+    console.error("Chat error:", err);
+    addMessage("bot", COPY[lang].error);
+  } finally {
+    $send.disabled = false;
+    if (isOpen) $input.focus();
+  }
+}
+
+function autoResize() {
+  $input.style.height = "auto";
+  $input.style.height = Math.min($input.scrollHeight, 100) + "px";
+}
+
+function openChat() {
+  isOpen = true;
+  $panel.classList.add("open");
+  $launcher.classList.add("hidden");
+  $panel.setAttribute("aria-hidden", "false");
+  setTimeout(() => $input.focus(), 200);
+  scrollToBottom();
+}
+
+function closeChat() {
+  isOpen = false;
+  $panel.classList.remove("open");
+  $launcher.classList.remove("hidden");
+  $panel.setAttribute("aria-hidden", "true");
+}
+
+$launcher.addEventListener("click", openChat);
+$close.addEventListener("click", closeChat);
+$send.addEventListener("click", () => sendMessage($input.value));
+$input.addEventListener("keydown", (e) => {
+  if (e.key === "Enter" && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage($input.value);
+  }
+});
+$input.addEventListener("input", autoResize);
+
+[$langEn, $langEs].forEach(btn => {
+  btn.addEventListener("click", () => {
+    const newLang = btn === $langEn ? "en" : "es";
+    if (newLang === lang) return;
+    lang = newLang;
+    applyLang();
+    if (conversation.length === 0) renderMessages();
+  });
+});
+
+document.addEventListener("keydown", (e) => { if (e.key === "Escape" && isOpen) closeChat(); });
+
+applyLang();
+renderMessages();
+</script>
+</body>
+</html>
