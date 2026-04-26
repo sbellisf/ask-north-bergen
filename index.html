@@ -603,7 +603,9 @@ async function sendMessage(text) {
   } catch (err) {
     hideTyping();
     console.error("Chat error:", err);
-    addMessage("bot", COPY[lang].error);
+    // Don't save the error message to conversation history.
+    // Showing it in the UI is enough; saving it would pollute future API calls.
+    addMessage("bot", COPY[lang].error, false);
   } finally {
     $send.disabled = false;
     if (isOpen) $input.focus();
