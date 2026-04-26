@@ -29,6 +29,57 @@ function redactPII(text) {
   return cleaned;
 }
 
+// Anthropic requires alternating user/assistant messages with specific role names.
+// 1. Translate frontend "bot" role to API "assistant"
+// 2. Collapse runs of same role (defensive against broken sequences)
+// 3. Cap to last 20 turns to prevent runaway token costs
+// 4. Ensure first message is from user
+function normalizeMessages(messages) {
+  // Translate roles
+  const translated = messages.map(m => ({
+    role: m.role === "bot" ? "assistant" : m.role,
+    content: m.content || ""
+  }));
+  
+  // Collapse consecutive same-role messages, keeping the most recent
+  const collapsed = [];
+  for (const m of translated) {
+    if (collapsed.length && collapsed[collapsed.length - 1].role === m.role) {
+      collapsed[collapsed.length - 1] = m;
+    } else {
+      collapsed.push(m);
+    }
+  }
+  
+  // Trim leading non-user messages
+  while (collapsed.length && collapsed[0].role !== "user") collapsed.shift();
+  
+  // Cap to last 20 turns to prevent unbounded token costs
+  return collapsed.slice(-20);
+}
+
+// Retry wrapper for transient Anthropic API failures (529 overloaded, network blips)
+async function callAnthropicWithRetry(payload, apiKey, maxRetries = 1) {
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    const response = await fetch(ANTHROPIC_API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": apiKey,
+        "anthropic-version": "2023-06-01"
+      },
+      body: JSON.stringify(payload)
+    });
+    
+    // Retry on transient errors only
+    if (!response.ok && (response.status === 529 || response.status === 503) && attempt < maxRetries) {
+      await new Promise(r => setTimeout(r, 1000));
+      continue;
+    }
+    return response;
+  }
+}
+
 // Conversation flagging for the monthly review report
 function flagConversation(messages, response) {
   const allText = [...messages.map(m => m.content), response].join(" ").toLowerCase();
@@ -95,20 +146,14 @@ exports.handler = async (event) => {
       `Off-hours: ${isOffHours ? "YES, most township offices are closed" : "NO, within business hours"}\n` +
       `User language preference: ${language}`;
     
-    const apiResponse = await fetch(ANTHROPIC_API_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-key": process.env.ANTHROPIC_API_KEY,
-        "anthropic-version": "2023-06-01"
-      },
-      body: JSON.stringify({
-        model: MODEL,
-        max_tokens: 1024,
-        system: contextualPrompt,
-        messages: messages.map(m => ({ role: m.role, content: m.content }))
-      })
-    });
+    const cleanMessages = normalizeMessages(messages);
+    
+    const apiResponse = await callAnthropicWithRetry({
+      model: MODEL,
+      max_tokens: 1500,
+      system: contextualPrompt,
+      messages: cleanMessages
+    }, process.env.ANTHROPIC_API_KEY);
     
     if (!apiResponse.ok) {
       const errText = await apiResponse.text();
