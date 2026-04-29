@@ -13,6 +13,11 @@ const SYSTEM_PROMPT = fs.readFileSync(
 const ANTHROPIC_API_URL = "https://api.anthropic.com/v1/messages";
 const MODEL = "claude-sonnet-4-20250514";
 
+// Restrict CORS to known origins. Add custom domains here as you wire them up.
+const ALLOWED_ORIGINS = [
+  "https://ask-north-bergen.netlify.app"
+];
+
 // PII patterns: redact before any logging
 const PII_PATTERNS = [
   { regex: /\b\d{3}-\d{2}-\d{4}\b/g, label: "[SSN-REDACTED]" },
@@ -94,18 +99,28 @@ function flagConversation(messages, response) {
 }
 
 exports.handler = async (event) => {
-  const corsHeaders = {
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Headers": "Content-Type",
-    "Access-Control-Allow-Methods": "POST, OPTIONS"
-  };
+  const origin = event.headers.origin || event.headers.Origin || "";
+  const allowed = ALLOWED_ORIGINS.includes(origin);
+
+  const corsHeaders = allowed
+    ? {
+        "Access-Control-Allow-Origin": origin,
+        "Access-Control-Allow-Headers": "Content-Type",
+        "Access-Control-Allow-Methods": "POST, OPTIONS",
+        "Vary": "Origin"
+      }
+    : { "Vary": "Origin" };
   
   if (event.httpMethod === "OPTIONS") {
-    return { statusCode: 200, headers: corsHeaders, body: "" };
+    return { statusCode: allowed ? 204 : 403, headers: corsHeaders, body: "" };
   }
   
   if (event.httpMethod !== "POST") {
     return { statusCode: 405, headers: corsHeaders, body: "Method Not Allowed" };
+  }
+
+  if (!allowed) {
+    return { statusCode: 403, headers: corsHeaders, body: JSON.stringify({ error: "Origin not allowed" }) };
   }
   
   try {
